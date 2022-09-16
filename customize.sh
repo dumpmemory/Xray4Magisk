@@ -46,7 +46,7 @@ whichCustom() {
 
 # get version arg
 whichArch() {
-  case "$1" in
+  case "${core}" in
     xray)
       case "${ARCH}" in
         arm)
