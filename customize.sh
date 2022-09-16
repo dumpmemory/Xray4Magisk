@@ -14,8 +14,8 @@ if [ $BOOTMODE ! = true ] ; then
   core="custom"
   asset="custom"
 else
-  [ -f /sdcard/sing.config ] && source /sdcard/sing.config
-  [ -f ${module_path}/sing.config ] && source ${module_path}/sing.config
+  [ -f /sdcard/xray.config ] && source /sdcard/xray.config
+  [ -f ${module_path}/xray.config ] && source ${module_path}/xray.config
 fi
 
 config_file="${module_path}/confs/${config}"
@@ -99,6 +99,7 @@ whichArch() {
 
 # deploy assets
 asset() {
+  mkdir -p ${module_path}/assets
   case "${asset}" in
     loyalsoldier)
       /data/adb/magisk/busybox wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -O /sdcard/Download/geoip.dat >&2
@@ -200,6 +201,7 @@ whichCore() {
 
 # deploy core
 core() {
+  mkdir -p ${module_path}/bin
   case "${core}" in
     xray)
       unzip -j -o "${download_path}" "xray" -d ${module_path}/bin/ >&2
@@ -214,9 +216,7 @@ core() {
 }
 
 installModule() {
-  mkdir -p ${module_path}/bin
   mkdir -p ${module_path}/run
-  mkdir -p ${module_path}/assets
   mkdir -p ${module_path}/confs
   mkdir -p ${module_path}/scripts
   unzip -j -o "${ZIPFILE}" 'xray/scripts/*' -d ${module_path}/scripts >&2
@@ -251,4 +251,11 @@ installModule() {
   echo -n "version=Module v0.1, Core " >> $MODPATH/module.prop
   echo "${core} ${latest_version}" >> $MODPATH/module.prop
   echo "versionCode=20220916" >> $MODPATH/module.prop
+}
+
+main() {
+  whichCore
+  core
+  asset
+  installModule
 }
